@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Chatbot101.Loggers;
 
 namespace Chatbot101.Controllers
 {
@@ -11,6 +13,13 @@ namespace Chatbot101.Controllers
     [BotAuthentication]
     public class MessagesController : Controller
     {
+        private readonly ILogger<MessagesController> _logger;
+
+        public MessagesController(ILogger<MessagesController> logger)
+        {
+            _logger = logger;
+        }
+
         /// <summary>
         /// POST: api/Messages
         /// Receive a message from a user and reply to it
@@ -18,6 +27,8 @@ namespace Chatbot101.Controllers
         [HttpPost]
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
+            _logger.LogInformation(LoggerHelper.FormatActivity(activity));
+
             if (activity?.Type == ActivityTypes.Message)
             {
                 await Conversation.SendAsync(activity, () => new Dialogs.SmallTalkDialog());
