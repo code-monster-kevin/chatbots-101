@@ -19,8 +19,27 @@ namespace Chatbot101.Dialogs
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
             var activity = await result as Activity;
+            BotUserData bot_user_data = await new UserStateService().GetAsync(activity);
+
+            string reply = SmallTalkResponse(activity.Text);
+
+            if (bot_user_data == null)
+            {
+                BotUserData new_bot_user_data = new BotUserData
+                {
+                    // TODO
+                    Id = Guid.NewGuid(),
+                    FullName = "Code Green",
+                    Email = "codegreen@botframework.com"
+                };
+                await new UserStateService().UpdateAsync(activity, new_bot_user_data);
+            }
+            else
+            {
+                reply = "Hi " + bot_user_data.FullName + ", " + reply;
+            }
             
-            await context.PostAsync(SmallTalkResponse(activity.Text));
+            await context.PostAsync(reply);
             context.Wait(MessageReceivedAsync);
         }
 
