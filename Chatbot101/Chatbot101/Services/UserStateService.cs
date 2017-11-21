@@ -1,7 +1,5 @@
-﻿using Microsoft.Bot.Connector;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Connector;
 using System.Threading.Tasks;
 
 namespace Chatbot101.Services
@@ -10,32 +8,20 @@ namespace Chatbot101.Services
     {
         const string ChatBot101BotUserProperty = "chatbot101_botuser";
 
-        public async Task<BotUserData> GetAsync(Activity activity)
+        public BotUserData GetBotUserData(IDialogContext context)
         {
-            using (StateClient state_client = activity.GetStateClient())
-            {
-                IBotState bot_state = state_client.BotState;
-                BotData bot_data = await bot_state.GetUserDataAsync(activity.ChannelId, activity.From.Id);
-                return bot_data.GetProperty<BotUserData>(ChatBot101BotUserProperty);
-            }
+            BotUserData bot_data = null;
+            context.UserData.TryGetValue<BotUserData>(ChatBot101BotUserProperty, out bot_data);
+
+            return bot_data;
         }
 
-        public async Task UpdateAsync(Activity activity, BotUserData botuserdata)
+        public void SetBotUserData(IDialogContext context, BotUserData botuserdata)
         {
-            using (StateClient state_client = activity.GetStateClient())
-            {
-                IBotState bot_state = state_client.BotState;
-                BotData bot_data = await bot_state.GetUserDataAsync(activity.ChannelId, activity.From.Id);
-                BotUserData bot_user_data = bot_data.GetProperty<BotUserData>(ChatBot101BotUserProperty);
-                if (bot_user_data == null)
-                {
-                    bot_data.SetProperty(ChatBot101BotUserProperty, data: botuserdata);
-                    await bot_state.SetUserDataAsync(activity.ChannelId, activity.From.Id, bot_data);
-                }
-            }
+            context.UserData.SetValue<BotUserData>(ChatBot101BotUserProperty, botuserdata);
         }
 
-        public async Task DeleteAsync(Activity activity)
+        public async Task DeleteUserDataAsync(Activity activity)
         {
             using (StateClient state_client = activity.GetStateClient())
             {
@@ -47,7 +33,6 @@ namespace Chatbot101.Services
 
     public class BotUserData
     {
-        public Guid Id { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
     }

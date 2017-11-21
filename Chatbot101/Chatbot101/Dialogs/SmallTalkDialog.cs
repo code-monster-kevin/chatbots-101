@@ -15,25 +15,26 @@ namespace Chatbot101.Dialogs
             return Task.CompletedTask;
         }
 
-        private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
+        public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
-            var activity = await result as Activity;
-            BotUserData bot_user_data = await new UserStateService().GetAsync(activity);
+            var message = await result;
+            BotUserData bot_user_data = new UserStateService().GetBotUserData(context);
             if (bot_user_data == null)
             {
-                context.Call<object>(new IntroduceYourselfDialog(), ChildDialogComplete);
+                context.Call<object>(new IntroduceYourselfDialog(), ResumeAfterIntroducingYourselfDialog);
             }
             else
             {
-                string reply = SmallTalkResponse(activity.Text);
+                string reply = bot_user_data.FullName + ", ";
+                reply += SmallTalkResponse(message.Text);
                 await context.PostAsync(reply);
                 context.Wait(MessageReceivedAsync);
             }
         }
 
-        public virtual async Task ChildDialogComplete(IDialogContext context, IAwaitable<object> response)
+        public virtual async Task ResumeAfterIntroducingYourselfDialog(IDialogContext context, IAwaitable<object> response)
         {
-            string reply = SmallTalkResponse("smile");
+            string reply = SmallTalkResponse("hi");
             await context.PostAsync(reply);
             context.Done(this);
         }

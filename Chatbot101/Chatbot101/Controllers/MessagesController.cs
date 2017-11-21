@@ -1,13 +1,12 @@
-﻿using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using Chatbot101.Loggers;
+using Chatbot101.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Chatbot101.Loggers;
-using Chatbot101.Services;
-using System;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Chatbot101.Controllers
 {
@@ -49,7 +48,7 @@ namespace Chatbot101.Controllers
             {
                 // Implement user deletion here
                 // If we handle user deletion, return a real message
-                await new UserStateService().DeleteAsync(message);
+                await new UserStateService().DeleteUserDataAsync(message);
             }
             else if (message.Type == ActivityTypes.ConversationUpdate)
             {
