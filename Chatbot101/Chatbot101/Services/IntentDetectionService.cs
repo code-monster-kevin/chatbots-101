@@ -8,6 +8,7 @@
             HELLO,
             BYE_BYE,
             SMILE,
+            ROCKPAPERSCISSORS,
             UNKNOWN
         }
 
@@ -24,6 +25,9 @@
 
             if (IsWordInSentence(user_text, Smile_Words))
             { return IntentState.SMILE; }
+
+            if (IsWordInSentence(user_text, RockPaperScissors_Words))
+            { return IntentState.ROCKPAPERSCISSORS; }
 
             return IntentState.UNKNOWN;
         }
@@ -75,6 +79,14 @@
             "hehe",
             ":D",
             "lol"
+        };
+
+        private static string[] RockPaperScissors_Words =
+        {
+            "rock",
+            "paper",
+            "scissors",
+            "game"
         };
     }
 }

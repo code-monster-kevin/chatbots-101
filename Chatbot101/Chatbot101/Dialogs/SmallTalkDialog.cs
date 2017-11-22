@@ -25,16 +25,30 @@ namespace Chatbot101.Dialogs
             }
             else
             {
-                string reply = bot_user_data.FullName + ", ";
-                reply += SmallTalkResponse(message.Text);
-                await context.PostAsync(reply);
-                context.Wait(MessageReceivedAsync);
+                if (IntentDetectionService.CheckIntent(message.Text) == IntentDetectionService.IntentState.ROCKPAPERSCISSORS)
+                {
+                    context.Call<object>(new RockPaperScissorsDialog(), ResumeAfterRockPaperScissorsDialog);
+                }
+                else
+                {
+                    string reply = bot_user_data.FullName + ", ";
+                    reply += SmallTalkResponse(message.Text);
+                    await context.PostAsync(reply);
+                    context.Wait(MessageReceivedAsync);
+                }
             }
         }
 
         public virtual async Task ResumeAfterIntroducingYourselfDialog(IDialogContext context, IAwaitable<object> response)
         {
             string reply = SmallTalkResponse("hi");
+            await context.PostAsync(reply);
+            context.Done(this);
+        }
+
+        public virtual async Task ResumeAfterRockPaperScissorsDialog(IDialogContext context, IAwaitable<object> result)
+        {
+            string reply = "To play again, just type Rock, Paper, Scissors or Game";
             await context.PostAsync(reply);
             context.Done(this);
         }
