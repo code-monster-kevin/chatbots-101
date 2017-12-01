@@ -34,7 +34,6 @@ namespace Chatbot101.Forms
 
         async Task SaveLeaveFormAsync(IDialogContext context, LeaveForm leave_form)
         {
-            //string reply = String.Format("You applied for leave starting on {0} until {1}.", leave_form.LeaveFrom.ToString("dd-MMM-yyyy"), leave_form.LeaveTo.ToString("dd-MMM-yyyy"));
             string reply = "You leave is being processed.";
             await context.PostAsync(reply);
         }
