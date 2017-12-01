@@ -8,10 +8,20 @@ namespace Chatbot101.Forms
     [Serializable]
     public class LeaveForm
     {
+        [Describe(Description = "Your name")]
+        [Prompt("Please tell me your name (current value: {})")]
         public string Name { get; set; }
+        [Describe(Description = "Your email")]
+        [Prompt("Please tell me your email (current value: {})")]
         public string Email { get; set; }
+        [Describe(Description = "The type of leave you want to apply")]
+        [Prompt("What type of leave do you want to apply? (current value: {})  {||}")]
         public LeaveType LeaveType { get; set; }
+        [Describe(Description = "The leave date starting from")]
+        [Prompt("What date will your leave start? (current value: {})")]
         public DateTime LeaveFrom { get; set; }
+        [Describe(Description = "The leave ending date")]
+        [Prompt("What date will your leave end? (current value: {})")]
         public DateTime LeaveTo { get; set; }
 
         public IForm<LeaveForm> BuildForm()

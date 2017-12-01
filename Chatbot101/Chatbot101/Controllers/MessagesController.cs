@@ -89,9 +89,7 @@ namespace Chatbot101.Controllers
 
         void HandleCanceledForm(Activity activity, FormCanceledException ex)
         {
-            string responseMessage =  $"Your conversation ended on { ex.Last}. " +
-                "The following properties have values: " +
-                string.Join(", ", ex.Completed);
+            string responseMessage = "You cancelled the form.";
 
             var connector = new ConnectorClient(new Uri(activity.ServiceUrl));
             var response = activity.CreateReply(responseMessage);
