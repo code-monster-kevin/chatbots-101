@@ -14,7 +14,7 @@ namespace Chatbot101.Dialogs
 
         public async Task StartAsync(IDialogContext context)
         {
-            await context.PostAsync("Hi, I'm Small Talk bot, and I don't believe we've met...\n\nWhat do you want me to call you?");
+            await context.PostAsync("Hi, I'm Small Talk bot, and I don't believe we've met...\n\n What do you want me to call you?");
             context.Wait(MessageReceivedAsync);
         }
 
@@ -41,7 +41,7 @@ namespace Chatbot101.Dialogs
             };
             new UserStateService().SetBotUserData(context, bot_user_data);
 
-            string reply = @"Hi {0}, Thanks for sharing your email {1} with me.\n\nI feel more comfortable talking to you now.";
+            string reply = "Hi {0}, Thanks for sharing your email {1} with me.\n\n I feel more comfortable talking to you now.";
             await context.PostAsync(String.Format(reply, user_name, user_email));
 
             context.Done(this);
