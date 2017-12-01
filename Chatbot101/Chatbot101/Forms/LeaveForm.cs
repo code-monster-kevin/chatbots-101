@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 namespace Chatbot101.Forms
 {
     [Serializable]
+    [Template(TemplateUsage.NotUnderstood,
+        "Sorry, I didn’t get that.",
+        "Please try again.",
+        "My apologies, I didn’t understand '{0}'.",
+        "Excuse me, I didn’t quite get that.",
+        "Sorry, but I’m a chatbot and don’t know what '{ 0}' means.")]
     public class LeaveForm
     {
         [Describe(Description = "Your name")]
@@ -34,7 +40,6 @@ namespace Chatbot101.Forms
 
         async Task SaveLeaveFormAsync(IDialogContext context, LeaveForm leave_form)
         {
-            //string reply = String.Format("You applied for leave starting on {0} until {1}.", leave_form.LeaveFrom.ToString("dd-MMM-yyyy"), leave_form.LeaveTo.ToString("dd-MMM-yyyy"));
             string reply = "You leave is being processed.";
             await context.PostAsync(reply);
         }
