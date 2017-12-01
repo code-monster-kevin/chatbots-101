@@ -9,6 +9,7 @@
             BYE_BYE,
             SMILE,
             ROCKPAPERSCISSORS,
+            APPLY_LEAVE,
             UNKNOWN
         }
 
@@ -28,6 +29,11 @@
 
             if (IsWordInSentence(user_text, RockPaperScissors_Words))
             { return IntentState.ROCKPAPERSCISSORS; }
+
+            if (IsWordInSentence(user_text, ApplyLeave_Words))
+            {
+                return IntentState.APPLY_LEAVE;
+            }
 
             return IntentState.UNKNOWN;
         }
@@ -87,6 +93,13 @@
             "paper",
             "scissors",
             "game"
+        };
+
+        private static string[] ApplyLeave_Words =
+        {
+            "leave",
+            "holiday",
+            "time off"
         };
     }
 }

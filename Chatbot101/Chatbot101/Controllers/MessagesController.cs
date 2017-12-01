@@ -1,9 +1,12 @@
-﻿using Chatbot101.Loggers;
+﻿using Chatbot101.Forms;
+using Chatbot101.Loggers;
 using Chatbot101.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.FormFlow;
 using Microsoft.Bot.Connector;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -32,7 +35,14 @@ namespace Chatbot101.Controllers
 
             if (activity?.Type == ActivityTypes.Message)
             {
-                await Conversation.SendAsync(activity, () => new Dialogs.SmallTalkDialog());
+                try
+                {
+                    await Conversation.SendAsync(activity, BuildLeaveFormDialog);
+                }
+                catch (FormCanceledException ex)
+                {
+                    HandleCanceledForm(activity, ex);
+                }
             }
             else
             {
@@ -70,6 +80,22 @@ namespace Chatbot101.Controllers
             }
 
             return null;
+        }
+
+        IDialog<LeaveForm> BuildLeaveFormDialog()
+        {
+            return FormDialog.FromForm(new LeaveForm().BuildForm);
+        }
+
+        void HandleCanceledForm(Activity activity, FormCanceledException ex)
+        {
+            string responseMessage =  $"Your conversation ended on { ex.Last}. " +
+                "The following properties have values: " +
+                string.Join(", ", ex.Completed);
+
+            var connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+            var response = activity.CreateReply(responseMessage);
+            connector.Conversations.ReplyToActivity(response);
         }
     }
 }
